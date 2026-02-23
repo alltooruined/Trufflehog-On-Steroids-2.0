@@ -2,12 +2,12 @@
 
 > The enterprise-grade secret scanner Chrome extension. 160+ detection patterns, AI-powered triage, PII detection, security header analysis, CVSS scoring, and SARIF export.
 
-## What's New (v3.0 — God Edition)
+## What's New (God Edition)
 
 | Feature | Standard Trufflehog | Steroids² |
 |---------|------|-----------------|
 | **Regex Patterns** | ~10 | **160+** with MITRE ATT&CK mapping & remediation |
-| **Entropy Analysis** | ❌ | **Rewritten** — n-gram analysis, aggressive FP suppression |
+| **Entropy Analysis** | ❌ | **Rewritten** - n-gram analysis, aggressive FP suppression |
 | **PII Detection** | ❌ | ✅ Credit cards (Luhn), SSNs, IBANs, emails, phones |
 | **Security Headers** | ❌ | ✅ CSP, HSTS, X-Frame-Options, CORS, cookie analysis |
 | **CORS Misconfiguration** | ❌ | ✅ Wildcard + credentials, origin reflection |
@@ -41,8 +41,8 @@ The #1 complaint from v2.0 was entropy false positives. v3.0 completely rewrites
 
 ```
 manifest.json              MV3 manifest
-├── background.js          Service worker — orchestrates all engines
-├── inject.js              Content script — page scanning, DOM observer, storage scan
+├── background.js          Service worker, orchestrates all engines
+├── inject.js              Content script, page scanning, DOM observer, storage scan
 ├── interceptor.js         Page-level XHR/fetch/WS/SSE interception
 ├── patterns.js            160+ regex patterns with categories & MITRE mapping
 ├── entropy.js             Rewritten entropy scanner with aggressive FP filtering
@@ -66,7 +66,7 @@ Each pattern includes severity, category, MITRE ATT&CK technique ID, and remedia
 Shannon entropy with n-gram analysis, character distribution scoring, and context-aware thresholds. Comprehensive false positive filtering eliminates CSS values, JS identifiers, HTML attributes, common library code, and dictionary words.
 
 ### 3. PII Detection
-- **Credit Cards**: Visa, Mastercard, Amex, Discover, JCB — validated with Luhn algorithm
+- **Credit Cards**: Visa, Mastercard, Amex, Discover, JCB validated with Luhn algorithm
 - **SSNs**: US Social Security Numbers with context validation
 - **IBANs**: International Bank Account Numbers
 - **Emails**: Context-aware (only flags emails in data/API contexts, not HTML)
@@ -134,9 +134,9 @@ Produces: confidence (0-100), verdict (true_positive → false_positive), CVSS-s
 
 ## Security Notes
 
-- Runs entirely locally — no data leaves your browser (unless Claude API is enabled)
+- Runs entirely locally, no data leaves your browser (unless Claude API is enabled)
 - Claude API sends only redacted metadata, never raw secrets
-- Network interception is passive — reads only, never modifies
+- Network interception is passive reads only, never modifies
 - `.env` and `.git` probing is off by default (active scanning)
 - PII findings are masked in the UI (card numbers, SSNs, emails)
 
