@@ -4,10 +4,10 @@
 
 ## What's New (v3.0 — God Edition)
 
-| Feature | v2.0 | v3.0 Steroids² |
+| Feature | Standard Trufflehog | Steroids² |
 |---------|------|-----------------|
-| **Regex Patterns** | 140+ | **160+** with MITRE ATT&CK mapping & remediation |
-| **Entropy Analysis** | High FP rate | **Rewritten** — n-gram analysis, aggressive FP suppression |
+| **Regex Patterns** | ~10 | **160+** with MITRE ATT&CK mapping & remediation |
+| **Entropy Analysis** | ❌ | **Rewritten** — n-gram analysis, aggressive FP suppression |
 | **PII Detection** | ❌ | ✅ Credit cards (Luhn), SSNs, IBANs, emails, phones |
 | **Security Headers** | ❌ | ✅ CSP, HSTS, X-Frame-Options, CORS, cookie analysis |
 | **CORS Misconfiguration** | ❌ | ✅ Wildcard + credentials, origin reflection |
@@ -15,8 +15,8 @@
 | **localStorage Scanning** | ❌ | ✅ Scans localStorage & sessionStorage |
 | **Hydration Data Scanning** | ❌ | ✅ __NEXT_DATA__, __NUXT__, __INITIAL_STATE__ |
 | **DOM Mutation Observer** | ❌ | ✅ Catches dynamically injected secrets |
-| **JWT Analysis** | Basic | **Enhanced** — JWE detection, algorithm confusion, JWKS |
-| **AI Scoring** | Basic signals | **12 signals** with CVSS-style risk rating |
+| **JWT Analysis** | ❌ | **Enhanced** — JWE detection, algorithm confusion, JWKS |
+| **AI Scoring** | ❌ | **12 signals** with CVSS-style risk rating |
 | **SARIF Export** | ❌ | ✅ GitHub Advanced Security compatible |
 | **Pattern Categories** | ❌ | ✅ 17 categories (cloud, payment, auth, AI, etc.) |
 | **MITRE ATT&CK** | ❌ | ✅ Technique IDs on critical patterns |
