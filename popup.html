@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Trufflehog on Steroids²</title>
+  <link href="popup.css" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <img src="icon48.png" class="logo" alt="Trufflehog">
+      <div>
+        <h1>Trufflehog <span class="accent">on Steroids²</span></h1>
+        <span class="version">v3.0.0 Enterprise</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="stats-bar" id="statsBar">
+    <div class="stat" id="statCritical">
+      <span class="stat-count severity-critical">0</span>
+      <span class="stat-label">CRIT</span>
+    </div>
+    <div class="stat" id="statHigh">
+      <span class="stat-count severity-high">0</span>
+      <span class="stat-label">HIGH</span>
+    </div>
+    <div class="stat" id="statMedium">
+      <span class="stat-count severity-medium">0</span>
+      <span class="stat-label">MED</span>
+    </div>
+    <div class="stat" id="statLow">
+      <span class="stat-count severity-low">0</span>
+      <span class="stat-label">LOW</span>
+    </div>
+    <div class="stat">
+      <span class="stat-count" id="statTotal">0</span>
+      <span class="stat-label">TOTAL</span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="findings">Findings</button>
+    <button class="tab" data-tab="settings">Settings</button>
+    <button class="tab" data-tab="tools">Tools</button>
+  </div>
+
+  <!-- ═══ Findings Tab ═══ -->
+  <div class="tab-content active" id="tab-findings">
+    <div class="filter-bar">
+      <select id="severityFilter">
+        <option value="all">All Severities</option>
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <select id="typeFilter">
+        <option value="all">All Types</option>
+        <option value="regex">Pattern</option>
+        <option value="entropy">Entropy</option>
+        <option value="jwt">JWT</option>
+        <option value="pii">PII</option>
+        <option value="security-header">Sec Headers</option>
+        <option value="cors">CORS</option>
+        <option value="cookie">Cookies</option>
+        <option value="gitdir">Git Dir</option>
+      </select>
+      <select id="scopeFilter">
+        <option value="origin">This Origin</option>
+        <option value="all">All Origins</option>
+      </select>
+    </div>
+    <div id="findingsList" class="findings-list">
+      <div class="empty-state">No findings yet — browse some pages to start scanning</div>
+    </div>
+    <div class="findings-actions">
+      <button class="btn btn-sm" id="clearOrigin">Clear Origin</button>
+      <button class="btn btn-sm btn-danger" id="clearAll">Clear All</button>
+      <button class="btn btn-sm btn-accent" id="exportJSON">JSON</button>
+      <button class="btn btn-sm" id="exportCSV">CSV</button>
+      <button class="btn btn-sm" id="exportSARIF">SARIF</button>
+    </div>
+  </div>
+
+  <!-- ═══ Settings Tab ═══ -->
+  <div class="tab-content" id="tab-settings">
+    <div class="settings-group">
+      <h3>Detection Engines</h3>
+      <label class="toggle-row"><span>Specific Patterns <span class="badge">160+</span></span><input type="checkbox" id="specifics" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Generic Patterns</span><input type="checkbox" id="generics" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>AWS Keys</span><input type="checkbox" id="aws" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Entropy Analysis <span class="badge new">FIXED</span></span><input type="checkbox" id="entropyScanning" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>JWT Decode & Analyze</span><input type="checkbox" id="jwtAnalysis" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>PII Detection <span class="badge new">NEW</span></span><input type="checkbox" id="piiDetection" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Security Headers <span class="badge new">NEW</span></span><input type="checkbox" id="securityHeaders" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Source Map Scanning</span><input type="checkbox" id="sourceMapScanning" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Network Interception</span><input type="checkbox" id="networkInterception" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Storage Scanning <span class="badge new">NEW</span></span><input type="checkbox" id="storageScanning" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Hydration Data <span class="badge new">NEW</span></span><input type="checkbox" id="hydrationScanning" class="toggle-input"><span class="toggle-slider"></span></label>
+    </div>
+
+    <div class="settings-group">
+      <h3>AI Analysis</h3>
+      <label class="toggle-row"><span>Local Heuristic AI</span><input type="checkbox" id="aiLocalAnalysis" class="toggle-input"><span class="toggle-slider"></span></label>
+      <div class="input-group">
+        <label for="aiClaudeApiKey">Claude API Key <span class="hint">(optional — for deep analysis)</span></label>
+        <input type="password" id="aiClaudeApiKey" placeholder="sk-ant-api03-..." class="text-input">
+        <button class="btn btn-sm btn-accent" id="saveApiKey" style="margin-top:4px">Save Key</button>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <h3>Probing <span class="hint-inline">⚠ Active scanning</span></h3>
+      <label class="toggle-row"><span>Check .env files</span><input type="checkbox" id="checkEnv" class="toggle-input"><span class="toggle-slider"></span></label>
+      <label class="toggle-row"><span>Check .git dirs</span><input type="checkbox" id="checkGit" class="toggle-input"><span class="toggle-slider"></span></label>
+    </div>
+
+    <div class="settings-group">
+      <h3>Notifications</h3>
+      <label class="toggle-row"><span>Desktop Alerts</span><input type="checkbox" id="alerts" class="toggle-input"><span class="toggle-slider"></span></label>
+    </div>
+
+    <div class="settings-group">
+      <h3>Origin Deny List</h3>
+      <textarea id="denyList" class="text-area" placeholder="https://www.google.com, https://example.com"></textarea>
+      <span class="hint">Comma-separated origins to skip</span>
+    </div>
+  </div>
+
+  <!-- ═══ Tools Tab ═══ -->
+  <div class="tab-content" id="tab-tools">
+    <div class="settings-group">
+      <h3>JWT Decoder</h3>
+      <textarea id="jwtInput" class="text-area" placeholder="Paste a JWT here..."></textarea>
+      <button class="btn btn-accent" id="decodeJWT">Decode JWT</button>
+      <div id="jwtOutput" class="jwt-output" style="display:none"></div>
+    </div>
+    <div class="settings-group">
+      <h3>Bulk Tab Scanner</h3>
+      <textarea id="tabList" class="text-area" placeholder="https://target1.com, https://target2.com"></textarea>
+      <button class="btn btn-accent" id="openTabs">Open & Scan</button>
+    </div>
+    <div class="settings-group">
+      <h3>AI Deep Analysis</h3>
+      <p class="hint">Click a finding → "Analyze with Claude" for deep analysis.</p>
+      <button class="btn btn-accent" id="aiAnalyzeAll" disabled>Analyze All Critical</button>
+    </div>
+  </div>
+
+  <!-- Finding Detail Modal -->
+  <div class="modal-overlay" id="findingModal" style="display:none">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Finding Details</h3>
+        <button class="icon-btn" id="closeModal">✕</button>
+      </div>
+      <div id="modalBody" class="modal-body"></div>
+      <div class="modal-actions">
+        <button class="btn btn-sm btn-accent" id="modalAiAnalyze">🤖 Analyze with Claude</button>
+        <button class="btn btn-sm" id="modalCopyMatch">Copy Secret</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

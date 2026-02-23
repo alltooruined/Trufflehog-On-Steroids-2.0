@@ -1,0 +1,45 @@
+{
+  "name": "Trufflehog on Steroids²",
+  "version": "3.0.0",
+  "manifest_version": 3,
+  "description": "Enterprise secret scanner — 160+ patterns, entropy analysis, JWT decode, PII detection, security header analysis, network interception, AI triage",
+  "homepage_url": "https://trufflesecurity.com",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Trufflehog on Steroids²",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "storage",
+    "scripting",
+    "notifications",
+    "webRequest"
+  ],
+  "host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["inject.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["interceptor.js"],
+      "matches": ["https://*/*", "http://*/*"]
+    }
+  ]
+}
